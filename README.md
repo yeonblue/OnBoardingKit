@@ -1,13 +1,13 @@
 # OnboardingKit
 
 OnboardingKit provides an onboarding flow that is simple and easy to implement.
+![video-preview](https://github.com/yeonblue/OnBoardingKit/raw/Main/sample.gif)
 
 ## Contents
 
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Credits](#credits)
 
 ## Requirements
 
