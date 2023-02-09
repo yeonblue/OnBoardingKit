@@ -38,7 +38,6 @@ class AnimatedBarView: UIView {
     
     private let barColor: UIColor
     
-    
     // MARK: - Init
     init(barColor: UIColor) {
         self.barColor = barColor

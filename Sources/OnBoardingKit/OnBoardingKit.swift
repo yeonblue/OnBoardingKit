@@ -9,7 +9,7 @@ public class OnBoardingKit {
     
     // MARK: - Properties
     private lazy var onboardingViewController: OnBoardingViewController = {
-        let vc = OnBoardingViewController(slides: slides, tintColor: tintColor)
+        let vc = OnBoardingViewController(slides: slides, tintColor: tintColor, themeFont: themeFont)
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
         
@@ -26,15 +26,19 @@ public class OnBoardingKit {
     
     private let slides: [Slide]
     private let tintColor: UIColor
-        
+    private let themeFont: UIFont
+    
     public weak var delegate: OnboardingKitDelegate?
     
     private var rootVC: UIViewController?
     
     // MARK: - Init
-    public init(slides: [Slide], tintColor: UIColor) {
+    public init(slides: [Slide],
+                tintColor: UIColor,
+                themeFont: UIFont = UIFont(name: "ArialRoundedMTBold", size: 20) ?? UIFont.systemFont(ofSize: 20)) {
         self.slides = slides
         self.tintColor = tintColor
+        self.themeFont = themeFont
     }
     
     public func launchOnboarding(rootVC: UIViewController) {

@@ -13,9 +13,10 @@ class OnBoardingViewController: UIViewController {
     // MARK: - Properties
     private let slides: [Slide]
     private let tintColor: UIColor
+    private let themeFont: UIFont
     
     private lazy var transitionView: TransitionView = {
-        let v = TransitionView(slides: slides, tintColor: tintColor)
+        let v = TransitionView(slides: slides, tintColor: tintColor, themeFont: themeFont)
         return v
     }()
     
@@ -43,9 +44,10 @@ class OnBoardingViewController: UIViewController {
     var getStartedButtonDidTap: (() -> Void)?
     
     // MARK: - Init
-    public init(slides: [Slide], tintColor: UIColor) {
+    public init(slides: [Slide], tintColor: UIColor, themeFont: UIFont) {
         self.slides = slides
         self.tintColor = tintColor
+        self.themeFont = themeFont
         super.init(nibName: nil, bundle: nil)
     }
     
