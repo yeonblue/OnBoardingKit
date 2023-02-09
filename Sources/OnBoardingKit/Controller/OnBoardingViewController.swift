@@ -15,7 +15,7 @@ class OnBoardingViewController: UIViewController {
     private let tintColor: UIColor
     
     private lazy var transitionView: TransitionView = {
-        let v = TransitionView()
+        let v = TransitionView(slides: slides, tintColor: tintColor)
         return v
     }()
     
@@ -54,6 +54,12 @@ class OnBoardingViewController: UIViewController {
         setupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        transitionView.start()
+    }
+    
+    // MARK: - Setup
     private func setupViews() {
         view.backgroundColor = .red
         view.addSubview(stackView)
