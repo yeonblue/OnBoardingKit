@@ -24,7 +24,7 @@ class TransitionView: UIView {
     private lazy var barView: [AnimatedBarView] = {
         var views: [AnimatedBarView] = []
         slides.forEach { _ in
-            views.append(AnimatedBarView())
+            views.append(AnimatedBarView(barColor: viewTintColor))
         }
         
         return views
@@ -56,6 +56,7 @@ class TransitionView: UIView {
     
     private let slides: [Slide]
     private let viewTintColor: UIColor
+    private var currentIdx: Int = -1
     
     // MARK: - Init
     init(slides: [Slide], tintColor: UIColor) {
@@ -106,8 +107,38 @@ class TransitionView: UIView {
         guard timer == nil else { return }
         timer = DispatchSource.makeTimerSource()
         timer?.schedule(deadline: .now(), repeating: .seconds(3), leeway: .seconds(1)) // leeway는 일종의 threshold
-        timer?.setEventHandler(handler: {
-            print("show next img")
+        timer?.setEventHandler(handler: { [weak self] in
+            DispatchQueue.main.async {
+                self?.showNextImage()
+            }
         })
+    }
+    
+    private func showNextImage() {
+        
+        let nextImage: UIImage
+        let nextTitle: String
+        let nextBarView: AnimatedBarView
+        
+        // index가 마지막이면 맨 처음을 보여줘야 함, 아니면 다음 Idx
+        if slides.indices.contains(currentIdx + 1) {
+            nextImage = slides[currentIdx + 1].image
+            nextTitle = slides[currentIdx + 1].title
+            nextBarView = barView[currentIdx + 1]
+            currentIdx += 1
+        } else {
+            nextImage = slides[0].image
+            nextTitle = slides[0].title
+            nextBarView = barView[0]
+            currentIdx = 0
+        }
+        
+        UIView.transition(with: imageView,
+                          duration: 0.5,
+                          options: .transitionCrossDissolve,
+                          animations: { self.imageView.image = nextImage },
+                          completion: nil)
+        titleView.setTitle(text: nextTitle)
+        nextBarView.startAnimating()
     }
 }
