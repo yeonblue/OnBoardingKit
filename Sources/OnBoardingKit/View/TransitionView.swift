@@ -21,7 +21,7 @@ class TransitionView: UIView {
         return imgView
     }()
     
-    private lazy var barView: [AnimatedBarView] = {
+    private lazy var barViews: [AnimatedBarView] = {
         var views: [AnimatedBarView] = []
         slides.forEach { _ in
             views.append(AnimatedBarView(barColor: viewTintColor))
@@ -32,7 +32,7 @@ class TransitionView: UIView {
     
     private lazy var barStackView: UIStackView = {
         let v = UIStackView()
-        barView.forEach { barView in
+        barViews.forEach { barView in
             v.addArrangedSubview(barView)
         }
         v.axis = .horizontal
@@ -57,6 +57,10 @@ class TransitionView: UIView {
     private let slides: [Slide]
     private let viewTintColor: UIColor
     private var currentIdx: Int = -1
+    
+    var slideIdx: Int {
+        return currentIdx
+    }
     
     // MARK: - Init
     init(slides: [Slide], tintColor: UIColor) {
@@ -124,12 +128,17 @@ class TransitionView: UIView {
         if slides.indices.contains(currentIdx + 1) {
             nextImage = slides[currentIdx + 1].image
             nextTitle = slides[currentIdx + 1].title
-            nextBarView = barView[currentIdx + 1]
+            nextBarView = barViews[currentIdx + 1]
             currentIdx += 1
         } else {
+            
+            barViews.forEach { barView in
+                barView.reset()
+            }
+            
             nextImage = slides[0].image
             nextTitle = slides[0].title
-            nextBarView = barView[0]
+            nextBarView = barViews[0]
             currentIdx = 0
         }
         
@@ -140,5 +149,22 @@ class TransitionView: UIView {
                           completion: nil)
         titleView.setTitle(text: nextTitle)
         nextBarView.startAnimating()
+    }
+    
+    func handleTap(direction: Direction) {
+        switch direction {
+        case .left:
+            barViews[currentIdx].reset()
+            if barViews.indices.contains(currentIdx - 1) {
+                barViews[currentIdx - 1].reset()
+            }
+            currentIdx -= 2
+        case .right:
+            barViews[currentIdx].complete()
+        }
+        
+        timer?.cancel()
+        timer = nil
+        start()
     }
 }

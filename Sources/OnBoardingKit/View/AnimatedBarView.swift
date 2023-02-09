@@ -52,14 +52,6 @@ class AnimatedBarView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setAnimator() {
-        animator = UIViewPropertyAnimator(duration: 3.0,
-                                          curve: .easeInOut,
-                                          animations: {
-            self.foregroundBarView.transform = .identity
-        })
-    }
-    
     private func setLayout() {
         addSubview(backgroundBarView)
         backgroundBarView.addSubview(foregroundBarView)
@@ -73,6 +65,14 @@ class AnimatedBarView: UIView {
         }
     }
     
+    private func setAnimator() {
+        animator = UIViewPropertyAnimator(duration: 3.0,
+                                          curve: .easeInOut,
+                                          animations: {
+            self.foregroundBarView.transform = .identity
+        })
+    }
+    
     private func observe() {
         $state.sink { [weak self] state in
             guard let self = self else { return }
@@ -82,7 +82,7 @@ class AnimatedBarView: UIView {
                     self.foregroundBarView.alpha = 0.0
                     self.animator.stopAnimation(false)
                 case .animating:
-                    //self.foregroundBarView.transform = .init(scaleX: 0, y: 1.0)
+                    self.foregroundBarView.transform = .init(scaleX: 0, y: 1.0)
                     self.foregroundBarView.transform = .init(translationX: -self.frame.size.width, y: 0)
                     self.foregroundBarView.alpha = 1.0
                     self.animator.startAnimation()

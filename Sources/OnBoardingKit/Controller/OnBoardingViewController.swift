@@ -21,12 +21,14 @@ class OnBoardingViewController: UIViewController {
     
     private lazy var buttonContainerView: ButtonContainerView = {
         let v = ButtonContainerView(tintColor: tintColor)
-        v.nextButtonDidTap = {
-            print("nextButtonDidTap")
+        v.nextButtonDidTap = { [weak self] in
+            guard let self = self else { return }
+            self.nextButtonDidTap?(self.transitionView.slideIdx)
+            self.transitionView.handleTap(direction: .right)
         }
         
-        v.getStartedButtonDidTap = {
-            print("getStartedButtonDidTap")
+        v.getStartedButtonDidTap = { [weak self] in
+            self?.getStartedButtonDidTap?()
         }
         return v
     }()
@@ -36,6 +38,9 @@ class OnBoardingViewController: UIViewController {
         v.axis = .vertical
         return v
     }()
+    
+    var nextButtonDidTap: ((Int) -> Void)?
+    var getStartedButtonDidTap: (() -> Void)?
     
     // MARK: - Init
     public init(slides: [Slide], tintColor: UIColor) {
@@ -52,6 +57,7 @@ class OnBoardingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        setupGesture()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -71,5 +77,26 @@ class OnBoardingViewController: UIViewController {
         buttonContainerView.snp.makeConstraints {
             $0.height.equalTo(120)
         }
+    }
+    
+    private func setupGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewDidTapped))
+        transitionView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func viewDidTapped(_ tap: UITapGestureRecognizer) {
+        let point = tap.location(in: view)
+        let midPoint = view.frame.size.width / 2
+        
+        if point.x < midPoint {
+            transitionView.handleTap(direction: .left)
+        } else {
+            transitionView.handleTap(direction: .right)
+        }
+    }
+    
+    // MARK: - Functions
+    func stopAnimation() {
+        transitionView.stop()
     }
 }
