@@ -54,7 +54,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        DispatchQueue.main.async { // DispatchQueue는 VC가 reference를 관리하지 않으므로 strong self로 써도 상관없음
+        DispatchQueue.main.async {
             self.onboardingKit = OnBoardingKit(
                 slides: [
                     .init(image: UIImage(named: "imSlide1")!,
